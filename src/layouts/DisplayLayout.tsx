@@ -1,0 +1,44 @@
+import { Outlet } from 'react-router-dom';
+import { useDisplaySession } from '@/hooks/useDisplaySession';
+import { Badge } from '@/components/ui/badge';
+import { QRCodeSVG } from 'qrcode.react';
+import { Recycle } from 'lucide-react';
+
+export default function DisplayLayout() {
+  const { isControlled } = useDisplaySession();
+  const remoteUrl = `${window.location.origin}/remote`;
+
+  return (
+    <div className="min-h-screen bg-background display-mode text-foreground overflow-hidden">
+      {/* Header */}
+      <header className="absolute top-0 left-0 right-0 p-6 flex items-center justify-between z-10">
+        <div className="flex items-center gap-4">
+          <Recycle className="w-10 h-10 text-primary" />
+          <h1 className="text-3xl font-bold">Upcycling Dictionary</h1>
+        </div>
+        <div className="flex items-center gap-4">
+          {isControlled && (
+            <Badge variant="secondary" className="text-sm">
+              Remote Connected
+            </Badge>
+          )}
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="h-screen flex items-center justify-center pt-20 pb-32 px-8">
+        <Outlet />
+      </main>
+
+      {/* Footer with QR Code */}
+      <footer className="absolute bottom-0 left-0 right-0 p-6 flex items-end justify-between">
+        <div className="text-sm text-muted-foreground">
+          <p>Scan to control this display</p>
+        </div>
+        <div className="bg-card p-3 rounded-lg">
+          <QRCodeSVG value={remoteUrl} size={100} />
+        </div>
+      </footer>
+    </div>
+  );
+}
