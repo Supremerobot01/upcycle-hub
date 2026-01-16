@@ -26,6 +26,7 @@ export interface Brand {
   primary_category_id: string | null;
   secondary_category_id: string | null;
   user_id: string | null;
+  is_featured: boolean;
   created_at: string;
   updated_at: string;
 }
