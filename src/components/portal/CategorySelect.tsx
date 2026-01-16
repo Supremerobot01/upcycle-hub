@@ -35,7 +35,10 @@ export default function CategorySelect({
       render={({ field }) => (
         <FormItem>
           <FormLabel>{label}{required && ' *'}</FormLabel>
-          <Select onValueChange={field.onChange} value={field.value || ''}>
+          <Select 
+            onValueChange={(val) => field.onChange(val === '__none__' ? '' : val)} 
+            value={field.value || (required ? '' : '__none__')}
+          >
             <FormControl>
               <SelectTrigger>
                 <SelectValue placeholder={isLoading ? 'Loading...' : placeholder} />
@@ -43,7 +46,7 @@ export default function CategorySelect({
             </FormControl>
             <SelectContent>
               {!required && (
-                <SelectItem value="">None</SelectItem>
+                <SelectItem value="__none__">None</SelectItem>
               )}
               {grouped && groupOrder.map((groupName) => {
                 const categories = grouped[groupName];
