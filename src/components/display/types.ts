@@ -1,4 +1,5 @@
 import type { Brand, BrandContent, DictionaryEntry } from '@/types/database';
+import { brandImages } from '@/assets/brands';
 
 export type DisplayBrand = Brand & { brand_content?: BrandContent[] };
 
@@ -8,6 +9,15 @@ export type DisplayItem =
 
 export function getBrandContentValue(brand: DisplayBrand, fieldType: BrandContent['field_type']) {
   return brand.brand_content?.find((content) => content.field_type === fieldType)?.value;
+}
+
+export function getBrandImage(brand: DisplayBrand): string | undefined {
+  // First check for local generated images by brand name
+  const localImage = brandImages[brand.name];
+  if (localImage) return localImage;
+  
+  // Fall back to database content
+  return getBrandContentValue(brand, 'image') || getBrandContentValue(brand, 'logo');
 }
 
 export function getItemTitle(item: DisplayItem) {

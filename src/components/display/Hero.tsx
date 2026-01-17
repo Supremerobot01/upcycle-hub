@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { getBrandContentValue, getItemDescription, getItemTitle, type DisplayItem } from './types';
+import { getBrandImage, getItemDescription, getItemTitle, type DisplayItem } from './types';
 
 interface HeroProps {
   item: DisplayItem;
@@ -9,10 +9,7 @@ interface HeroProps {
 export default function Hero({ item, onSelect }: HeroProps) {
   const title = getItemTitle(item);
   const description = getItemDescription(item);
-  const imageUrl =
-    item.kind === 'brand'
-      ? getBrandContentValue(item.brand, 'image') || getBrandContentValue(item.brand, 'logo')
-      : undefined;
+  const imageUrl = item.kind === 'brand' ? getBrandImage(item.brand) : undefined;
 
   return (
     <section className="relative overflow-hidden rounded-2xl bg-muted">

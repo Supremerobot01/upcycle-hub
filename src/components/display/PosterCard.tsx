@@ -1,5 +1,5 @@
 import { Badge } from '@/components/ui/badge';
-import { getBrandContentValue, getItemDescription, getItemTitle, type DisplayItem } from './types';
+import { getBrandImage, getItemDescription, getItemTitle, type DisplayItem } from './types';
 
 interface PosterCardProps {
   item: DisplayItem;
@@ -11,10 +11,7 @@ interface PosterCardProps {
 export default function PosterCard({ item, onSelect, index = 0, variant = 'default' }: PosterCardProps) {
   const title = getItemTitle(item);
   const description = getItemDescription(item);
-  const imageUrl =
-    item.kind === 'brand'
-      ? getBrandContentValue(item.brand, 'image') || getBrandContentValue(item.brand, 'logo')
-      : undefined;
+  const imageUrl = item.kind === 'brand' ? getBrandImage(item.brand) : undefined;
 
   const isNew =
     item.kind === 'entry'
