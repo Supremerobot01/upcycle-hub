@@ -2,11 +2,14 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFeaturedBrands } from '@/hooks/useBrands';
 import { Badge } from '@/components/ui/badge';
+import { QRCodeSVG } from 'qrcode.react';
+import { Recycle } from 'lucide-react';
 
 export default function DisplayIdle() {
   const { data: featuredBrands } = useFeaturedBrands();
   const navigate = useNavigate();
   const [carouselIndex, setCarouselIndex] = useState(0);
+  const remoteUrl = `${window.location.origin}/remote`;
 
   // Auto-rotate carousel
   useEffect(() => {
@@ -23,34 +26,56 @@ export default function DisplayIdle() {
   };
 
   return (
-    <div 
-      className="text-center max-w-4xl cursor-pointer" 
-      onClick={handleInteraction}
-      onKeyDown={handleInteraction}
-      role="button"
-      tabIndex={0}
-    >
-      {featuredBrands?.length ? (
-        <>
-          <Badge className="mb-6 bg-tier-featured text-background">Featured Brand</Badge>
-          <h2 className="text-display mb-4">
-            {featuredBrands[carouselIndex]?.name}
-          </h2>
-          <div className="flex justify-center gap-2 mt-8">
-            {featuredBrands.map((_, i) => (
-              <div
-                key={i}
-                className={`w-2 h-2 rounded-full transition-colors ${
-                  i === carouselIndex ? 'bg-primary' : 'bg-muted'
-                }`}
-              />
-            ))}
+    <>
+      {/* Fullscreen overlay that escapes parent layout constraints */}
+      <div 
+        className="fixed inset-0 z-50 w-screen h-screen flex items-center justify-center cursor-pointer bg-background" 
+        onClick={handleInteraction}
+        onKeyDown={handleInteraction}
+        role="button"
+        tabIndex={0}
+      >
+        {/* Header */}
+        <header className="fixed top-0 left-0 right-0 p-6 flex items-center gap-4 z-10">
+          <Recycle className="w-10 h-10 text-primary" />
+          <h1 className="text-3xl font-bold">Upcycling Dictionary</h1>
+        </header>
+
+        {/* Centered content */}
+        <div className="text-center max-w-4xl px-8">
+          {featuredBrands?.length ? (
+            <>
+              <Badge className="mb-6 bg-tier-featured text-background">Featured Brand</Badge>
+              <h2 className="text-display mb-4">
+                {featuredBrands[carouselIndex]?.name}
+              </h2>
+              <div className="flex justify-center gap-2 mt-8">
+                {featuredBrands.map((_, i) => (
+                  <div
+                    key={i}
+                    className={`w-2 h-2 rounded-full transition-colors ${
+                      i === carouselIndex ? 'bg-primary' : 'bg-muted'
+                    }`}
+                  />
+                ))}
+              </div>
+            </>
+          ) : (
+            <h2 className="text-display">Upcycling Dictionary</h2>
+          )}
+          <p className="text-muted-foreground mt-8">Touch to explore</p>
+        </div>
+
+        {/* Footer with QR Code */}
+        <footer className="fixed bottom-0 left-0 right-0 p-6 flex items-end justify-between">
+          <div className="text-sm text-muted-foreground">
+            <p>Scan to control this display</p>
           </div>
-        </>
-      ) : (
-        <h2 className="text-display">Upcycling Dictionary</h2>
-      )}
-      <p className="text-muted-foreground mt-8">Touch to explore</p>
-    </div>
+          <div className="bg-card p-3 rounded-lg">
+            <QRCodeSVG value={remoteUrl} size={100} />
+          </div>
+        </footer>
+      </div>
+    </>
   );
 }
