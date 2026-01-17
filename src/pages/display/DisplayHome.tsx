@@ -62,19 +62,22 @@ export default function DisplayHome() {
   }, [categories, entries]);
 
   const rows = useMemo(() => {
-    const baseRows: { title: string; items: DisplayItem[]; categoryId?: string }[] = [
-      { title: 'Featured Brands', items: featuredItems },
-      { title: 'New Brands', items: brandItems.slice(0, 12) },
-      { title: 'Dictionary Entries', items: entryItems.slice(0, 12) },
-      ...categoryRows,
+    const baseRows: { title: string; items: DisplayItem[]; exploreAllPath?: string }[] = [
+      { title: 'Featured Brands', items: featuredItems, exploreAllPath: '/display/browse/featured-brands' },
+      { title: 'New Brands', items: brandItems.slice(0, 12), exploreAllPath: '/display/browse/brands' },
+      { title: 'Dictionary Entries', items: entryItems.slice(0, 12), exploreAllPath: '/display/browse/entries' },
+      ...categoryRows.map(row => ({
+        ...row,
+        exploreAllPath: `/display/category/${row.categoryId}`,
+      })),
     ].filter((row) => row.items.length > 0);
 
     if (baseRows.length < 5 && entryItems.length > 12) {
-      baseRows.push({ title: 'More Entries', items: entryItems.slice(12, 24) });
+      baseRows.push({ title: 'More Entries', items: entryItems.slice(12, 24), exploreAllPath: '/display/browse/entries' });
     }
 
     if (baseRows.length < 5 && brandItems.length > 12) {
-      baseRows.push({ title: 'More Brands', items: brandItems.slice(12, 24) });
+      baseRows.push({ title: 'More Brands', items: brandItems.slice(12, 24), exploreAllPath: '/display/browse/brands' });
     }
 
     return baseRows;
@@ -115,7 +118,7 @@ export default function DisplayHome() {
                 items={row.items}
                 onSelect={handleSelect}
                 variant={rowIndex === 0 ? 'featured' : 'default'}
-                onExploreAll={row.categoryId ? () => navigate(`/display/category/${row.categoryId}`) : undefined}
+                onExploreAll={row.exploreAllPath ? () => navigate(row.exploreAllPath!) : undefined}
               />
             </div>
           ))

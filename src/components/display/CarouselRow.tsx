@@ -39,17 +39,13 @@ export default function CarouselRow({ title, items, onSelect, variant = 'default
     <section className="group/row space-y-4">
       <div className="flex items-end justify-between">
         <h3 className="text-3xl font-bold">{title}</h3>
-        {onExploreAll ? (
+        {onExploreAll && (
           <button 
             onClick={onExploreAll}
-            className="text-sm text-muted-foreground hover:text-primary opacity-0 transition-all group-hover/row:opacity-100 cursor-pointer"
+            className="text-sm text-muted-foreground hover:text-primary transition-colors cursor-pointer"
           >
             Explore all →
           </button>
-        ) : (
-          <span className="text-sm text-muted-foreground/50 opacity-0 transition-opacity group-hover/row:opacity-100">
-            {items.length} items
-          </span>
         )}
       </div>
       <div className="relative">
