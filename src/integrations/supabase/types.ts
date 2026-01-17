@@ -61,7 +61,7 @@ export type Database = {
           status: string
           tier: string
           updated_at: string | null
-          user_id: string
+          user_id: string | null
           website_url: string | null
         }
         Insert: {
@@ -75,7 +75,7 @@ export type Database = {
           status?: string
           tier?: string
           updated_at?: string | null
-          user_id: string
+          user_id?: string | null
           website_url?: string | null
         }
         Update: {
@@ -89,7 +89,7 @@ export type Database = {
           status?: string
           tier?: string
           updated_at?: string | null
-          user_id?: string
+          user_id?: string | null
           website_url?: string | null
         }
         Relationships: [
