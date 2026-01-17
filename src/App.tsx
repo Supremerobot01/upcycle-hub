@@ -20,6 +20,7 @@ import BrandEdit from "./pages/portal/BrandEdit";
 import DictionaryList from "./pages/portal/DictionaryList";
 import DictionaryEdit from "./pages/portal/DictionaryEdit";
 import CategoriesList from "./pages/portal/CategoriesList";
+import CategoryEdit from "./pages/portal/CategoryEdit";
 import AdminPanel from "./pages/portal/AdminPanel";
 
 // Display pages
@@ -30,6 +31,7 @@ import DisplayIdle from "./pages/display/DisplayIdle";
 
 // Dictionary pages
 import DictionaryHome from "./pages/dictionary/DictionaryHome";
+import DictionaryCategory from "./pages/dictionary/DictionaryCategory";
 import DictionaryEntry from "./pages/DictionaryEntry";
 
 // Other pages
@@ -62,6 +64,8 @@ const App = () => (
               <Route path="dictionary/new" element={<DictionaryEdit />} />
               <Route path="dictionary/edit/:entryId" element={<DictionaryEdit />} />
               <Route path="categories" element={<CategoriesList />} />
+              <Route path="categories/new" element={<CategoryEdit />} />
+              <Route path="categories/edit/:categoryId" element={<CategoryEdit />} />
               <Route path="admin" element={<AdminPanel />} />
             </Route>
 
@@ -77,6 +81,7 @@ const App = () => (
             {/* Dictionary routes (PUBLIC, READ-ONLY) */}
             <Route path="/dictionary" element={<DictionaryLayout />}>
               <Route index element={<DictionaryHome />} />
+              <Route path="categories/:categoryId" element={<DictionaryCategory />} />
               <Route path="entry/:slug" element={<DictionaryEntry />} />
             </Route>
 
