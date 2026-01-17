@@ -26,21 +26,8 @@ export function useDictionaryEntriesByCategory(categoryId: string | null, publis
   return useQuery({
     queryKey: ['dictionary_entries', 'category', categoryId, { publishedOnly }],
     queryFn: async () => {
-      // If no category selected, return all entries
-      if (!categoryId) {
-        let query = supabase
-          .from('dictionary_entries')
-          .select('*, entry_categories(category_id)')
-          .order('title', { ascending: true });
-
-        if (publishedOnly) {
-          query = query.eq('status', 'published');
-        }
-
-        const { data, error } = await query;
-        if (error) throw error;
-        return data as unknown as (DictionaryEntry & { entry_categories: { category_id: string }[] })[];
-      }
+      // If no category selected, return empty (use useDictionaryEntries for all)
+      if (!categoryId) return [];
 
       const { data: entryIds, error: junctionError } = await supabase
         .from('entry_categories')
@@ -66,6 +53,7 @@ export function useDictionaryEntriesByCategory(categoryId: string | null, publis
       if (error) throw error;
       return data as unknown as (DictionaryEntry & { entry_categories: { category_id: string }[] })[];
     },
+    enabled: !!categoryId,
   });
 }
 
