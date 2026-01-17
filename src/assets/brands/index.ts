@@ -39,82 +39,66 @@ export const categoryImages: Record<string, string> = {
   'recycled-synthetic-materials': recycledSynthetic,
 };
 
-// Map brand names to their primary category image
+// Map brand names to UNIQUE images - avoiding duplicates for visual variety
 export const brandImages: Record<string, string> = {
-  // Denim brands
+  // Spread brands across different images to avoid duplicates appearing next to each other
   'Revival Denim Co': denimUpcycling,
-  'Blue Reimagined': denimUpcycling,
-  'Indigo Second Life': denimUpcycling,
-  'Fade Forward': denimUpcycling,
+  'Blue Reimagined': zeroWasteDesign,
+  'Indigo Second Life': deadstock,
+  'Fade Forward': garmentRefashioning,
   
-  // Patchwork brands
   'Patchwork Studio': patchworkQuilting,
-  'Patch Collective': patchworkQuilting,
-  'Modern Quilt Studio': patchworkQuilting,
+  'Patch Collective': embroidery,
+  'Modern Quilt Studio': textileWaste,
   
-  // Repair/Mending brands
   'Stitch & Story': visibleMending,
-  'Visible Repair Co': visibleMending,
-  'Sashiko Studio': visibleMending,
+  'Visible Repair Co': naturalDye,
+  'Sashiko Studio': circularFashion,
   
-  // Leather brands
   'Leather Revival Co': leatherUpcycling,
   
-  // Zero-waste brands
   'Void Patterns Studio': zeroWasteDesign,
-  'Geometry Atelier': zeroWasteDesign,
-  'Full Cloth Collective': zeroWasteDesign,
+  'Geometry Atelier': mixedMaterial,
+  'Full Cloth Collective': naturalFiber,
   
-  // Textile waste brands
   'Salvage Textiles': textileWaste,
-  'Scrap Studios': textileWaste,
-  'EcoThread Collective': textileWaste,
+  'Scrap Studios': patchworkQuilting,
+  'EcoThread Collective': denimUpcycling,
   
-  // Natural dye brands
   'Natural Color Studio': naturalDye,
-  'Botanical Hues': naturalDye,
+  'Botanical Hues': thriftSecondhand,
   
-  // Embroidery brands
   'Embroidered Stories': embroidery,
-  'Ornament Studio': embroidery,
+  'Ornament Studio': visibleMending,
   
-  // Thrift/Secondhand brands
   'Thrift Alchemy': thriftSecondhand,
-  'Flip Studios': thriftSecondhand,
+  'Flip Studios': garmentRefashioning,
   
-  // Luxury brands
-  'Luxe Remake': luxuryUpcycling,
-  'Couture Reclaimed': luxuryUpcycling,
+  'Luxe Remake': circularFashion,
+  'Couture Reclaimed': deadstock,
   'Luxury Second Life': luxuryUpcycling,
   
-  // Community brands
   'Repair Café Network': repairCafe,
-  'Mend Together': repairCafe,
+  'Mend Together': visibleMending,
   
-  // Natural fiber brands
   'Fiber Reclaim': naturalFiber,
-  'Heritage Threads': naturalFiber,
+  'Heritage Threads': recycledSynthetic,
   
-  // Deadstock brands
   'Stockroom Revival': deadstock,
-  'End of Roll Studio': deadstock,
+  'End of Roll Studio': textileWaste,
   
-  // Garment refashioning brands
   'Second Cut Studio': garmentRefashioning,
-  'Reform Atelier': garmentRefashioning,
-  'The Remake Collective': garmentRefashioning,
-  'Reimagine Apparel': garmentRefashioning,
-  'Second Life Textiles': garmentRefashioning,
-  'Artisan Upcycle': garmentRefashioning,
+  'Reform Atelier': leatherUpcycling,
+  'The Remake Collective': patchworkQuilting,
+  'Reimagine Apparel': naturalDye,
+  'Second Life Textiles': embroidery,
+  'Artisan Upcycle': zeroWasteDesign,
   
-  // Mixed material brands
   'Hybrid Makers': mixedMaterial,
-  'Assemblage Studios': mixedMaterial,
+  'Assemblage Studios': deadstock,
   
-  // Circular fashion brands
   'Loop Fashion Lab': circularFashion,
   
-  // Recycled synthetic brands
   'Ocean Yarn Collective': recycledSynthetic,
 };
 
