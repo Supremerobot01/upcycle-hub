@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useBrands, useFeaturedBrands } from '@/hooks/useBrands';
 import { useCategories } from '@/hooks/useCategories';
 import { useDictionaryEntries } from '@/hooks/useDictionaryEntries';
@@ -13,6 +14,7 @@ import type { DisplayBrand, DisplayItem } from '@/components/display/types';
 type EntryWithCategories = DictionaryEntry & { entry_categories?: { category_id: string }[] };
 
 export default function DisplayHome() {
+  const navigate = useNavigate();
   const { data: categories } = useCategories(true);
   const { data: entries } = useDictionaryEntries(true);
   const { data: brands } = useBrands(true);
@@ -53,13 +55,14 @@ export default function DisplayHome() {
 
       return {
         title: category.name,
+        categoryId: category.id,
         items,
       };
     }).filter((row) => row.items.length > 0);
   }, [categories, entries]);
 
   const rows = useMemo(() => {
-    const baseRows = [
+    const baseRows: { title: string; items: DisplayItem[]; categoryId?: string }[] = [
       { title: 'Featured Brands', items: featuredItems },
       { title: 'New Brands', items: brandItems.slice(0, 12) },
       { title: 'Dictionary Entries', items: entryItems.slice(0, 12) },
@@ -112,6 +115,7 @@ export default function DisplayHome() {
                 items={row.items}
                 onSelect={handleSelect}
                 variant={rowIndex === 0 ? 'featured' : 'default'}
+                onExploreAll={row.categoryId ? () => navigate(`/display/category/${row.categoryId}`) : undefined}
               />
             </div>
           ))
