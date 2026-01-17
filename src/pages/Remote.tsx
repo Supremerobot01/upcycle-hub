@@ -5,8 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Wifi, WifiOff, ChevronUp, ChevronDown } from 'lucide-react';
-import logo from '@/assets/logo.png';
+import { Recycle, Wifi, WifiOff, ChevronUp, ChevronDown } from 'lucide-react';
 
 export default function Remote() {
   const { grouped, categories } = useCategoriesGrouped();
@@ -34,7 +33,10 @@ export default function Remote() {
     <div className="min-h-screen bg-background">
       <header className="border-b bg-card sticky top-0 z-10">
         <div className="px-4 py-4 flex items-center justify-between">
-          <img src={logo} alt="Upcycling Dictionary" className="h-8" />
+          <div className="flex items-center gap-3">
+            <Recycle className="w-6 h-6 text-primary" />
+            <h1 className="text-lg font-semibold">Remote Control</h1>
+          </div>
           <Badge variant={isConnected ? 'default' : 'secondary'} className="gap-1">
             {isConnected ? <Wifi className="w-3 h-3" /> : <WifiOff className="w-3 h-3" />}
             {isConnected ? 'Connected' : 'Connecting...'}

@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useFeaturedBrands } from '@/hooks/useBrands';
 import { Badge } from '@/components/ui/badge';
 import { QRCodeSVG } from 'qrcode.react';
+import { Recycle } from 'lucide-react';
 import { getBrandImage } from '@/components/display/types';
-import logo from '@/assets/logo.png';
 
 // Timing
 const HOLD_DURATION = 6500; // time fully visible before crossfade starts
@@ -252,8 +252,9 @@ export default function DisplayIdle() {
       </div>
 
       {/* Header */}
-      <header className="absolute top-0 left-0 right-0 p-8 z-10">
-        <img src={logo} alt="Upcycling Dictionary" className="h-14 drop-shadow-lg" />
+      <header className="absolute top-0 left-0 right-0 p-8 flex items-center gap-4 z-10">
+        <Recycle className="w-12 h-12 text-primary drop-shadow-lg" />
+        <h1 className="text-4xl font-bold text-white drop-shadow-lg">Upcycling Dictionary</h1>
       </header>
 
       {/* Centered content - positioned lower for cinematic feel */}

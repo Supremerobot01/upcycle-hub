@@ -4,6 +4,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { 
+  Recycle, 
   LogOut, 
   ExternalLink, 
   LayoutDashboard, 
@@ -13,7 +14,6 @@ import {
   Settings 
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import logo from '@/assets/logo.png';
 
 const navItems = [
   { path: '/portal/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -57,8 +57,9 @@ export default function PortalLayout() {
       <header className="border-b bg-card sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-6">
-            <Link to="/portal/dashboard">
-              <img src={logo} alt="Upcycling Dictionary" className="h-8" />
+            <Link to="/portal/dashboard" className="flex items-center gap-3">
+              <Recycle className="w-6 h-6 text-primary" />
+              <h1 className="text-xl font-semibold">Brand Portal</h1>
             </Link>
             <nav className="hidden md:flex items-center gap-1">
               {navItems.map((item) => (

@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
-import logo from '@/assets/logo.png';
+import { Recycle } from 'lucide-react';
 
 export default function Auth() {
   const [email, setEmail] = useState('');
@@ -67,8 +67,8 @@ export default function Auth() {
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <div className="mx-auto mb-4">
-            <img src={logo} alt="Upcycling Dictionary" className="h-12" />
+          <div className="mx-auto mb-4 w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
+            <Recycle className="w-6 h-6 text-primary" />
           </div>
           <CardTitle className="text-2xl">Brand Portal</CardTitle>
           <CardDescription>Manage your upcycling brand listing</CardDescription>

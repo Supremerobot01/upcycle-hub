@@ -1,15 +1,15 @@
 import { Outlet, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { LogIn } from 'lucide-react';
-import logo from '@/assets/logo.png';
+import { Recycle, LogIn } from 'lucide-react';
 
 export default function DictionaryLayout() {
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b bg-card sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link to="/dictionary">
-            <img src={logo} alt="Upcycling Dictionary" className="h-8" />
+          <Link to="/dictionary" className="flex items-center gap-3">
+            <Recycle className="w-6 h-6 text-primary" />
+            <h1 className="text-xl font-semibold">Upcycling Dictionary</h1>
           </Link>
           <Link to="/portal/login">
             <Button variant="outline" size="sm">
