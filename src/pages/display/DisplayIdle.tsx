@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFeaturedBrands } from '@/hooks/useBrands';
 import { Badge } from '@/components/ui/badge';
@@ -6,100 +6,176 @@ import { QRCodeSVG } from 'qrcode.react';
 import { Recycle } from 'lucide-react';
 import { getBrandImage } from '@/components/display/types';
 
+const CAROUSEL_INTERVAL = 6000;
+const CROSSFADE_DURATION = 1500;
+
 export default function DisplayIdle() {
   const { data: featuredBrands } = useFeaturedBrands();
   const navigate = useNavigate();
-  const [carouselIndex, setCarouselIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [nextIndex, setNextIndex] = useState<number | null>(null);
+  const [isTransitioning, setIsTransitioning] = useState(false);
   const remoteUrl = `${window.location.origin}/remote`;
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Auto-rotate carousel
+  // Auto-rotate with crossfade
   useEffect(() => {
-    if (!featuredBrands?.length) return;
-    const interval = setInterval(() => {
-      setCarouselIndex(i => (i + 1) % featuredBrands.length);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, [featuredBrands?.length]);
+    if (!featuredBrands?.length || featuredBrands.length <= 1) return;
 
-  // Navigate to home on any interaction
+    const startTransition = () => {
+      const next = (currentIndex + 1) % featuredBrands.length;
+      setNextIndex(next);
+      setIsTransitioning(true);
+
+      // Complete transition after fade duration
+      timeoutRef.current = setTimeout(() => {
+        setCurrentIndex(next);
+        setNextIndex(null);
+        setIsTransitioning(false);
+      }, CROSSFADE_DURATION);
+    };
+
+    const interval = setInterval(startTransition, CAROUSEL_INTERVAL);
+    return () => {
+      clearInterval(interval);
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, [featuredBrands?.length, currentIndex]);
+
   const handleInteraction = () => {
     navigate('/display');
   };
 
-  const currentBrand = featuredBrands?.[carouselIndex];
+  const currentBrand = featuredBrands?.[currentIndex];
+  const nextBrand = nextIndex !== null ? featuredBrands?.[nextIndex] : null;
   const currentImage = currentBrand ? getBrandImage(currentBrand) : undefined;
+  const nextImage = nextBrand ? getBrandImage(nextBrand) : undefined;
+  const displayBrand = isTransitioning && nextBrand ? nextBrand : currentBrand;
 
   return (
-    <>
-      {/* Fullscreen overlay that escapes parent layout constraints */}
-      <div 
-        className="fixed inset-0 z-50 w-screen h-screen flex items-center justify-center cursor-pointer overflow-hidden" 
-        onClick={handleInteraction}
-        onKeyDown={handleInteraction}
-        role="button"
-        tabIndex={0}
-      >
-        {/* Background image with crossfade */}
-        {currentImage && (
-          <div 
-            key={carouselIndex}
-            className="absolute inset-0 animate-fade-in"
-          >
-            <img 
-              src={currentImage} 
-              alt="" 
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-background/40" />
-          </div>
-        )}
-        
-        {/* Fallback background when no image */}
-        {!currentImage && (
-          <div className="absolute inset-0 bg-background" />
-        )}
+    <div 
+      className="fixed inset-0 z-50 w-screen h-screen cursor-pointer overflow-hidden bg-black" 
+      onClick={handleInteraction}
+      onKeyDown={handleInteraction}
+      role="button"
+      tabIndex={0}
+    >
+      {/* Current background image */}
+      {currentImage && (
+        <div 
+          className="absolute inset-0 transition-opacity ease-in-out"
+          style={{ 
+            transitionDuration: `${CROSSFADE_DURATION}ms`,
+            opacity: isTransitioning ? 0 : 1 
+          }}
+        >
+          <img 
+            src={currentImage} 
+            alt="" 
+            className="w-full h-full object-cover scale-105"
+          />
+        </div>
+      )}
+      
+      {/* Next background image (fades in) */}
+      {nextImage && isTransitioning && (
+        <div 
+          className="absolute inset-0 transition-opacity ease-in-out"
+          style={{ 
+            transitionDuration: `${CROSSFADE_DURATION}ms`,
+            opacity: 1 
+          }}
+        >
+          <img 
+            src={nextImage} 
+            alt="" 
+            className="w-full h-full object-cover scale-105"
+          />
+        </div>
+      )}
 
-        {/* Header */}
-        <header className="fixed top-0 left-0 right-0 p-6 flex items-center gap-4 z-10">
-          <Recycle className="w-10 h-10 text-primary" />
-          <h1 className="text-3xl font-bold">Upcycling Dictionary</h1>
-        </header>
+      {/* Cinematic vignette overlay */}
+      <div className="absolute inset-0 pointer-events-none">
+        {/* Strong radial vignette */}
+        <div 
+          className="absolute inset-0"
+          style={{
+            background: 'radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.8) 100%)'
+          }}
+        />
+        {/* Bottom gradient for text legibility */}
+        <div 
+          className="absolute inset-0"
+          style={{
+            background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.6) 30%, transparent 60%)'
+          }}
+        />
+        {/* Top gradient for header */}
+        <div 
+          className="absolute inset-0"
+          style={{
+            background: 'linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, transparent 20%)'
+          }}
+        />
+      </div>
 
-        {/* Centered content */}
-        <div className="relative z-10 text-center max-w-4xl px-8">
+      {/* Header */}
+      <header className="absolute top-0 left-0 right-0 p-8 flex items-center gap-4 z-10">
+        <Recycle className="w-12 h-12 text-primary drop-shadow-lg" />
+        <h1 className="text-4xl font-bold text-white drop-shadow-lg">Upcycling Dictionary</h1>
+      </header>
+
+      {/* Centered content - positioned lower for cinematic feel */}
+      <div className="absolute inset-0 flex items-end justify-center pb-32 z-10">
+        <div 
+          className="text-center max-w-5xl px-8 transition-opacity duration-500"
+          style={{ opacity: isTransitioning ? 0.7 : 1 }}
+        >
           {featuredBrands?.length ? (
             <>
-              <Badge className="mb-6 bg-tier-featured text-background">Featured Brand</Badge>
-              <h2 className="text-display mb-4 drop-shadow-lg">
-                {currentBrand?.name}
+              <Badge className="mb-6 bg-tier-featured text-background text-lg px-4 py-1.5 shadow-xl">
+                Featured Brand
+              </Badge>
+              <h2 
+                className="text-7xl md:text-8xl font-bold text-white mb-6 tracking-tight"
+                style={{ textShadow: '0 4px 30px rgba(0,0,0,0.8), 0 2px 10px rgba(0,0,0,0.9)' }}
+              >
+                {displayBrand?.name}
               </h2>
-              <div className="flex justify-center gap-2 mt-8">
+              <div className="flex justify-center gap-3 mt-10">
                 {featuredBrands.map((_, i) => (
                   <div
                     key={i}
-                    className={`w-2 h-2 rounded-full transition-colors ${
-                      i === carouselIndex ? 'bg-primary' : 'bg-muted/50'
+                    className={`h-1.5 rounded-full transition-all duration-500 ${
+                      i === (isTransitioning && nextIndex !== null ? nextIndex : currentIndex) 
+                        ? 'bg-primary w-8' 
+                        : 'bg-white/30 w-3'
                     }`}
                   />
                 ))}
               </div>
             </>
           ) : (
-            <h2 className="text-display">Upcycling Dictionary</h2>
+            <h2 
+              className="text-7xl md:text-8xl font-bold text-white tracking-tight"
+              style={{ textShadow: '0 4px 30px rgba(0,0,0,0.8)' }}
+            >
+              Upcycling Dictionary
+            </h2>
           )}
-          <p className="text-muted-foreground mt-8">Touch to explore</p>
+          <p className="text-white/60 mt-10 text-xl tracking-wide uppercase">Touch anywhere to explore</p>
         </div>
-
-        {/* Footer with QR Code */}
-        <footer className="fixed bottom-0 left-0 right-0 p-6 flex items-end justify-between z-10">
-          <div className="text-sm text-muted-foreground">
-            <p>Scan to control this display</p>
-          </div>
-          <div className="bg-card p-3 rounded-lg">
-            <QRCodeSVG value={remoteUrl} size={100} />
-          </div>
-        </footer>
       </div>
-    </>
+
+      {/* Footer with QR Code */}
+      <footer className="absolute bottom-0 left-0 right-0 p-8 flex items-end justify-between z-10">
+        <div className="text-white/50 text-sm">
+          <p>Scan to control this display</p>
+        </div>
+        <div className="bg-white p-3 rounded-xl shadow-2xl">
+          <QRCodeSVG value={remoteUrl} size={100} bgColor="white" fgColor="black" />
+        </div>
+      </footer>
+    </div>
   );
 }
