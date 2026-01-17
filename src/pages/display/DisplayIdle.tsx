@@ -10,6 +10,18 @@ import { getBrandImage } from '@/components/display/types';
 const HOLD_DURATION = 6500; // time fully visible before crossfade starts
 const CROSSFADE_DURATION = 1500; // fade duration
 
+// Ken Burns animation variants
+const KEN_BURNS_VARIANTS = [
+  'animate-ken-burns-1',
+  'animate-ken-burns-2',
+  'animate-ken-burns-3',
+  'animate-ken-burns-4',
+  'animate-ken-burns-5',
+  'animate-ken-burns-6',
+] as const;
+
+const getRandomKenBurns = () => KEN_BURNS_VARIANTS[Math.floor(Math.random() * KEN_BURNS_VARIANTS.length)];
+
 type Slot = 0 | 1;
 
 export default function DisplayIdle() {
@@ -29,6 +41,9 @@ export default function DisplayIdle() {
   const [incomingIndex, setIncomingIndex] = useState<number | null>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [fadeInReady, setFadeInReady] = useState(false);
+
+  // Random Ken Burns effect per slot
+  const [slotKenBurns, setSlotKenBurns] = useState<[string, string]>([getRandomKenBurns(), getRandomKenBurns()]);
 
   // Refs to avoid re-creating timers on every render
   const currentIndexRef = useRef(0);
@@ -103,10 +118,17 @@ export default function DisplayIdle() {
       setIsTransitioning(true);
       setFadeInReady(false);
 
-      // Load upcoming image into the hidden slot.
+      // Load upcoming image into the hidden slot with a new random Ken Burns effect.
       setSlotImages((prev) => {
         const copy: [string | undefined, string | undefined] = [...prev];
         copy[incomingSlot] = nextImage;
+        return copy;
+      });
+
+      // Assign a new random Ken Burns animation to the incoming slot
+      setSlotKenBurns((prev) => {
+        const copy: [string, string] = [...prev];
+        copy[incomingSlot] = getRandomKenBurns();
         return copy;
       });
 
@@ -161,9 +183,9 @@ export default function DisplayIdle() {
   }, [activeSlot, fadeInReady, incomingSlot, isTransitioning]);
 
   const kenBurnsClass = (slot: Slot) => {
-    // Start Ken Burns exactly when the image becomes visible.
-    if (slot === activeSlot) return 'animate-ken-burns';
-    if (isTransitioning && slot === incomingSlot && fadeInReady) return 'animate-ken-burns';
+    // Start Ken Burns exactly when the image becomes visible, using the slot's random variant.
+    if (slot === activeSlot) return slotKenBurns[slot];
+    if (isTransitioning && slot === incomingSlot && fadeInReady) return slotKenBurns[slot];
     return '';
   };
 

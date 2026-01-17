@@ -77,15 +77,41 @@ export default {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
-        "ken-burns": {
+        // Ken Burns variants for cinematic variety
+        "ken-burns-1": {
           "0%": { transform: "scale(1) translate(0, 0)" },
-          "100%": { transform: "scale(1.15) translate(-2%, -1%)" },
+          "100%": { transform: "scale(1.12) translate(-2%, -1%)" },
+        },
+        "ken-burns-2": {
+          "0%": { transform: "scale(1.1) translate(-1%, 0)" },
+          "100%": { transform: "scale(1) translate(1%, 1%)" },
+        },
+        "ken-burns-3": {
+          "0%": { transform: "scale(1) translate(0, 0)" },
+          "100%": { transform: "scale(1.15) translate(2%, -1%)" },
+        },
+        "ken-burns-4": {
+          "0%": { transform: "scale(1.08) translate(1%, 1%)" },
+          "100%": { transform: "scale(1) translate(-1%, 0)" },
+        },
+        "ken-burns-5": {
+          "0%": { transform: "scale(1) translate(0, 1%)" },
+          "100%": { transform: "scale(1.1) translate(0, -2%)" },
+        },
+        "ken-burns-6": {
+          "0%": { transform: "scale(1.12) translate(0, -1%)" },
+          "100%": { transform: "scale(1) translate(0, 1%)" },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "ken-burns": "ken-burns 8s ease-out forwards",
+        "ken-burns-1": "ken-burns-1 8s ease-out forwards",
+        "ken-burns-2": "ken-burns-2 8s ease-out forwards",
+        "ken-burns-3": "ken-burns-3 8s ease-out forwards",
+        "ken-burns-4": "ken-burns-4 8s ease-out forwards",
+        "ken-burns-5": "ken-burns-5 8s ease-out forwards",
+        "ken-burns-6": "ken-burns-6 8s ease-out forwards",
       },
     },
   },
