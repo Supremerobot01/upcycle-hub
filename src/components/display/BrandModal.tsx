@@ -1,6 +1,6 @@
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { getBrandContentValue, type DisplayBrand } from './types';
+import { getBrandContentValue, getBrandImage, type DisplayBrand } from './types';
 
 interface BrandModalProps {
   brand: DisplayBrand | null;
@@ -10,7 +10,8 @@ interface BrandModalProps {
 
 export default function BrandModal({ brand, open, onOpenChange }: BrandModalProps) {
   const logoUrl = brand ? getBrandContentValue(brand, 'logo') : undefined;
-  const imageUrl = brand ? getBrandContentValue(brand, 'image') : undefined;
+  // Use the new getBrandImage function that prioritizes local AI-generated images
+  const imageUrl = brand ? getBrandImage(brand) : undefined;
   const blurb = brand ? getBrandContentValue(brand, 'blurb') : undefined;
   const bio = brand ? getBrandContentValue(brand, 'bio') : undefined;
   const videoUrl = brand ? getBrandContentValue(brand, 'video_url') : undefined;
