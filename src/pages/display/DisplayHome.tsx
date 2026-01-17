@@ -90,17 +90,30 @@ export default function DisplayHome() {
   };
 
   return (
-    <div className="space-y-10 pb-12">
+    <div className="space-y-12 pb-12">
       {heroItem ? (
-        <Hero item={heroItem} onSelect={handleSelect} />
+        <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
+          <Hero item={heroItem} onSelect={handleSelect} />
+        </div>
       ) : (
-        <Skeleton className="h-64 w-full rounded-2xl" />
+        <Skeleton className="h-[56vh] w-full rounded-2xl" />
       )}
 
-      <div className="space-y-10">
+      <div className="space-y-12">
         {rows.length ? (
-          rows.map((row) => (
-            <CarouselRow key={row.title} title={row.title} items={row.items} onSelect={handleSelect} />
+          rows.map((row, rowIndex) => (
+            <div
+              key={row.title}
+              className="animate-in fade-in slide-in-from-bottom-4 duration-500"
+              style={{ animationDelay: `${200 + rowIndex * 100}ms`, animationFillMode: 'both' }}
+            >
+              <CarouselRow
+                title={row.title}
+                items={row.items}
+                onSelect={handleSelect}
+                variant={rowIndex === 0 ? 'featured' : 'default'}
+              />
+            </div>
           ))
         ) : (
           <div className="space-y-4">
