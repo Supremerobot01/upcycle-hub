@@ -6,8 +6,9 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Recycle, Search, ChevronRight } from 'lucide-react';
+import { Search, ChevronRight } from 'lucide-react';
 import DictionaryEntryCard from '@/components/dictionary/DictionaryEntryCard';
+import logo from '@/assets/logo.png';
 
 export default function Dictionary() {
   const navigate = useNavigate();
@@ -35,9 +36,8 @@ export default function Dictionary() {
     <div className="min-h-screen bg-background">
       <header className="border-b bg-card sticky top-0 z-10">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate('/')}>
-            <Recycle className="w-6 h-6 text-primary" />
-            <h1 className="text-xl font-semibold">Upcycling Dictionary</h1>
+          <div className="cursor-pointer" onClick={() => navigate('/')}>
+            <img src={logo} alt="Upcycling Dictionary" className="h-8" />
           </div>
           <Button variant="outline" size="sm" onClick={() => navigate('/portal')}>
             Brand Portal
