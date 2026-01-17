@@ -110,7 +110,7 @@ export function useCreateBrand() {
     mutationFn: async (brand: Omit<Brand, 'id' | 'created_at' | 'updated_at'>) => {
       const { data, error } = await supabase
         .from('brands')
-        .insert(brand as Record<string, unknown>)
+        .insert(brand)
         .select()
         .single();
 

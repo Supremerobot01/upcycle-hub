@@ -116,7 +116,7 @@ export function useCreateDictionaryEntry() {
     mutationFn: async (entry: Omit<DictionaryEntry, 'id' | 'created_at' | 'updated_at'>) => {
       const { data, error } = await supabase
         .from('dictionary_entries')
-        .insert(entry as Record<string, unknown>)
+        .insert(entry)
         .select()
         .single();
 
