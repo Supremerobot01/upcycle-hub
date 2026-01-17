@@ -5,7 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Recycle, ArrowLeft, ExternalLink } from 'lucide-react';
+import { ArrowLeft, ExternalLink } from 'lucide-react';
+import logo from '@/assets/logo.png';
 
 export default function DictionaryEntry() {
   const { slug } = useParams<{ slug: string }>();
@@ -48,10 +49,7 @@ export default function DictionaryEntry() {
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back
           </Button>
-          <div className="flex items-center gap-3">
-            <Recycle className="w-6 h-6 text-primary" />
-            <span className="text-muted-foreground">Upcycling Dictionary</span>
-          </div>
+          <img src={logo} alt="Upcycling Dictionary" className="h-8" />
         </div>
       </header>
 

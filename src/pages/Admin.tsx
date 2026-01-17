@@ -20,8 +20,9 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
-import { Recycle, LogOut, ArrowLeft, Star, Plus, Pencil, Trash2 } from 'lucide-react';
+import { LogOut, ArrowLeft, Star, Plus, Pencil, Trash2 } from 'lucide-react';
 import type { BrandTier, Category, DictionaryEntry } from '@/types/database';
+import logo from '@/assets/logo.png';
 
 export default function Admin() {
   const { user, loading: authLoading, signOut, isAdmin } = useAuth();
@@ -302,10 +303,7 @@ export default function Admin() {
               <ArrowLeft className="w-4 h-4 mr-2" />
               Portal
             </Button>
-            <div className="flex items-center gap-3">
-              <Recycle className="w-6 h-6 text-primary" />
-              <h1 className="text-xl font-semibold">Admin</h1>
-            </div>
+            <img src={logo} alt="Upcycling Dictionary" className="h-8" />
           </div>
           <Button variant="ghost" size="sm" onClick={handleSignOut}>
             <LogOut className="w-4 h-4 mr-2" />
