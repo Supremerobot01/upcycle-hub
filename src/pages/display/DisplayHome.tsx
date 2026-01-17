@@ -6,6 +6,7 @@ import Hero from '@/components/display/Hero';
 import CarouselRow from '@/components/display/CarouselRow';
 import EntryModal from '@/components/display/EntryModal';
 import BrandModal from '@/components/display/BrandModal';
+import { Skeleton } from '@/components/ui/skeleton';
 import type { DictionaryEntry } from '@/types/database';
 import type { DisplayBrand, DisplayItem } from '@/components/display/types';
 
@@ -90,13 +91,27 @@ export default function DisplayHome() {
 
   return (
     <div className="space-y-10 pb-12">
-      <div className="text-sm font-semibold text-destructive">DISPLAY HOME RENDERED</div>
-      {heroItem ? <Hero item={heroItem} onSelect={handleSelect} /> : null}
+      {heroItem ? (
+        <Hero item={heroItem} onSelect={handleSelect} />
+      ) : (
+        <Skeleton className="h-64 w-full rounded-2xl" />
+      )}
 
       <div className="space-y-10">
-        {rows.map((row) => (
-          <CarouselRow key={row.title} title={row.title} items={row.items} onSelect={handleSelect} />
-        ))}
+        {rows.length ? (
+          rows.map((row) => (
+            <CarouselRow key={row.title} title={row.title} items={row.items} onSelect={handleSelect} />
+          ))
+        ) : (
+          <div className="space-y-4">
+            <Skeleton className="h-8 w-48" />
+            <div className="flex gap-4 overflow-x-auto pb-4">
+              {Array.from({ length: 6 }).map((_, index) => (
+                <Skeleton key={index} className="h-72 w-56 rounded-xl" />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       <EntryModal
