@@ -9,9 +9,10 @@ interface CarouselRowProps {
   items: DisplayItem[];
   onSelect: (item: DisplayItem) => void;
   variant?: 'default' | 'featured';
+  onExploreAll?: () => void;
 }
 
-export default function CarouselRow({ title, items, onSelect, variant = 'default' }: CarouselRowProps) {
+export default function CarouselRow({ title, items, onSelect, variant = 'default', onExploreAll }: CarouselRowProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
@@ -38,9 +39,14 @@ export default function CarouselRow({ title, items, onSelect, variant = 'default
     <section className="group/row space-y-4">
       <div className="flex items-end justify-between">
         <h3 className="text-3xl font-bold">{title}</h3>
-        <span className="text-sm text-muted-foreground opacity-0 transition-opacity group-hover/row:opacity-100">
-          Explore all →
-        </span>
+        {onExploreAll && (
+          <button 
+            onClick={onExploreAll}
+            className="text-sm text-muted-foreground hover:text-primary opacity-0 transition-all group-hover/row:opacity-100 cursor-pointer"
+          >
+            Explore all →
+          </button>
+        )}
       </div>
       <div className="relative">
         {/* Left fade + arrow */}
