@@ -26,13 +26,13 @@ export default function PosterCard({ item, onSelect, index = 0, variant = 'defau
     <button
       type="button"
       onClick={() => onSelect(item)}
-      className={`group shrink-0 text-left transition-all duration-300 ease-out ${
+      className={`group shrink-0 text-left ${
         isFeatured ? 'w-80' : 'w-56'
       }`}
       style={{ animationDelay: `${index * 50}ms` }}
     >
       <div
-        className={`relative overflow-hidden rounded-xl bg-muted ring-1 ring-border transition-all duration-300 ease-out group-hover:scale-105 group-hover:shadow-2xl group-hover:ring-primary/50 group-hover:z-10 ${
+        className={`relative overflow-hidden rounded-[10px] bg-muted shadow-[0_2px_12px_rgba(0,0,0,0.35)] transition-[transform,box-shadow] duration-[220ms] ease-[cubic-bezier(0.2,0,0,1)] group-hover:scale-[1.06] group-hover:z-10 group-hover:shadow-[0_12px_40px_rgba(0,0,0,0.6),0_0_0_1px_rgba(255,255,255,0.08)] ${
           isFeatured ? 'aspect-video' : 'aspect-[2/3]'
         }`}
       >
@@ -40,13 +40,16 @@ export default function PosterCard({ item, onSelect, index = 0, variant = 'defau
           <img
             src={imageUrl}
             alt={title}
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+            className="h-full w-full object-cover transition-transform duration-500 ease-[cubic-bezier(0.2,0,0,1)] group-hover:scale-110"
             loading="lazy"
           />
         ) : (
           <div className="h-full w-full bg-gradient-to-br from-primary/20 via-muted to-muted/50" />
         )}
+        {/* Base gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity duration-300 group-hover:from-black/90" />
+        {/* Cinematic vignette */}
+        <div className="pointer-events-none absolute inset-0 rounded-[inherit] bg-[linear-gradient(to_top,rgba(0,0,0,0.35),transparent_40%)]" />
         
         {/* Badges */}
         <div className="absolute top-2 left-2 right-2 flex gap-2">

@@ -66,7 +66,7 @@ export default function CarouselRow({ title, items, onSelect, variant = 'default
         <div
           ref={scrollRef}
           onScroll={checkScroll}
-          className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide"
+          className="flex gap-3 overflow-x-auto pb-4 scrollbar-hide"
         >
           {items.map((item, index) => (
             <PosterCard
