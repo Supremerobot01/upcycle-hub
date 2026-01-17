@@ -17,6 +17,12 @@ import mixedMaterial from './mixed-material.jpg';
 import circularFashion from './circular-fashion.jpg';
 import recycledSynthetic from './recycled-synthetic.jpg';
 
+// Unique brand-specific images (AI-generated to avoid duplicates)
+import assemblageStudios from './assemblage-studios.jpg';
+import coutureReclaimed from './couture-reclaimed.jpg';
+import geometryAtelier from './geometry-atelier.jpg';
+import fullClothCollective from './full-cloth-collective.jpg';
+
 // Map category slugs to images
 export const categoryImages: Record<string, string> = {
   'denim-upcycling': denimUpcycling,
@@ -58,8 +64,8 @@ export const brandImages: Record<string, string> = {
   'Leather Revival Co': leatherUpcycling,
   
   'Void Patterns Studio': zeroWasteDesign,
-  'Geometry Atelier': mixedMaterial,
-  'Full Cloth Collective': naturalFiber,
+  'Geometry Atelier': geometryAtelier,
+  'Full Cloth Collective': fullClothCollective,
   
   'Salvage Textiles': textileWaste,
   'Scrap Studios': patchworkQuilting,
@@ -75,7 +81,7 @@ export const brandImages: Record<string, string> = {
   'Flip Studios': garmentRefashioning,
   
   'Luxe Remake': circularFashion,
-  'Couture Reclaimed': deadstock,
+  'Couture Reclaimed': coutureReclaimed,
   'Luxury Second Life': luxuryUpcycling,
   
   'Repair Café Network': repairCafe,
@@ -95,7 +101,7 @@ export const brandImages: Record<string, string> = {
   'Artisan Upcycle': zeroWasteDesign,
   
   'Hybrid Makers': mixedMaterial,
-  'Assemblage Studios': deadstock,
+  'Assemblage Studios': assemblageStudios,
   
   'Loop Fashion Lab': circularFashion,
   
