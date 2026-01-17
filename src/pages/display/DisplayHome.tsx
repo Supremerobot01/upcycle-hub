@@ -1,122 +1,113 @@
-import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useCategoriesGrouped } from '@/hooks/useCategories';
-import { useFeaturedBrands } from '@/hooks/useBrands';
-import { useDisplaySession } from '@/hooks/useDisplaySession';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useMemo, useState } from 'react';
+import { useBrands, useFeaturedBrands } from '@/hooks/useBrands';
+import { useCategories } from '@/hooks/useCategories';
+import { useDictionaryEntries } from '@/hooks/useDictionaryEntries';
+import Hero from '@/components/display/Hero';
+import CarouselRow from '@/components/display/CarouselRow';
+import EntryModal from '@/components/display/EntryModal';
+import BrandModal from '@/components/display/BrandModal';
+import type { DictionaryEntry } from '@/types/database';
+import type { DisplayBrand, DisplayItem } from '@/components/display/types';
+
+type EntryWithCategories = DictionaryEntry & { entry_categories?: { category_id: string }[] };
 
 export default function DisplayHome() {
-  const { grouped, categories } = useCategoriesGrouped();
+  const { data: categories } = useCategories(true);
+  const { data: entries } = useDictionaryEntries(true);
+  const { data: brands } = useBrands(true);
   const { data: featuredBrands } = useFeaturedBrands();
-  const { currentState } = useDisplaySession();
-  const navigate = useNavigate();
-  
-  const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
-  const [carouselIndex, setCarouselIndex] = useState(0);
-  const [isIdle, setIsIdle] = useState(true);
 
-  const allCategories = categories || [];
-  const currentCategory = allCategories[selectedCategoryIndex];
+  const [selectedEntry, setSelectedEntry] = useState<DictionaryEntry | null>(null);
+  const [selectedBrand, setSelectedBrand] = useState<DisplayBrand | null>(null);
 
-  // Auto-rotate carousel when idle
-  useEffect(() => {
-    if (!isIdle || !featuredBrands?.length) return;
-    const interval = setInterval(() => {
-      setCarouselIndex(i => (i + 1) % featuredBrands.length);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, [isIdle, featuredBrands?.length]);
+  const entryItems = useMemo<DisplayItem[]>(() => {
+    return (entries as EntryWithCategories[] | undefined)?.map((entry) => ({
+      kind: 'entry',
+      entry,
+    })) || [];
+  }, [entries]);
 
-  // Handle remote control state
-  useEffect(() => {
-    if (currentState?.categoryIndex !== undefined) {
-      setSelectedCategoryIndex(currentState.categoryIndex);
-      setIsIdle(false);
+  const brandItems = useMemo<DisplayItem[]>(() => {
+    return (brands as DisplayBrand[] | undefined)?.map((brand) => ({
+      kind: 'brand',
+      brand,
+    })) || [];
+  }, [brands]);
+
+  const featuredItems = useMemo<DisplayItem[]>(() => {
+    return (featuredBrands as DisplayBrand[] | undefined)?.map((brand) => ({
+      kind: 'brand',
+      brand,
+    })) || [];
+  }, [featuredBrands]);
+
+  const categoryRows = useMemo(() => {
+    if (!categories?.length || !entries?.length) return [];
+    const entriesWithCategories = entries as EntryWithCategories[];
+
+    return categories.slice(0, 5).map((category) => {
+      const items = entriesWithCategories
+        .filter((entry) => entry.entry_categories?.some((cat) => cat.category_id === category.id))
+        .map<DisplayItem>((entry) => ({ kind: 'entry', entry }));
+
+      return {
+        title: category.name,
+        items,
+      };
+    }).filter((row) => row.items.length > 0);
+  }, [categories, entries]);
+
+  const rows = useMemo(() => {
+    const baseRows = [
+      { title: 'Featured Brands', items: featuredItems },
+      { title: 'New Brands', items: brandItems.slice(0, 12) },
+      { title: 'Dictionary Entries', items: entryItems.slice(0, 12) },
+      ...categoryRows,
+    ].filter((row) => row.items.length > 0);
+
+    if (baseRows.length < 5 && entryItems.length > 12) {
+      baseRows.push({ title: 'More Entries', items: entryItems.slice(12, 24) });
     }
-  }, [currentState]);
 
-  // Reset to idle after inactivity
-  useEffect(() => {
-    if (!isIdle) {
-      const timeout = setTimeout(() => setIsIdle(true), 90000);
-      return () => clearTimeout(timeout);
+    if (baseRows.length < 5 && brandItems.length > 12) {
+      baseRows.push({ title: 'More Brands', items: brandItems.slice(12, 24) });
     }
-  }, [isIdle, selectedCategoryIndex]);
 
-  const handlePrevCategory = () => {
-    setSelectedCategoryIndex(i => (i - 1 + allCategories.length) % allCategories.length);
-    setIsIdle(false);
-  };
+    return baseRows;
+  }, [featuredItems, brandItems, entryItems, categoryRows]);
 
-  const handleNextCategory = () => {
-    setSelectedCategoryIndex(i => (i + 1) % allCategories.length);
-    setIsIdle(false);
-  };
+  const heroItem = featuredItems[0] || entryItems[0] || brandItems[0];
 
-  const handleCategoryClick = () => {
-    if (currentCategory) {
-      navigate(`/display/categories/${currentCategory.id}`);
+  const handleSelect = (item: DisplayItem) => {
+    if (item.kind === 'entry') {
+      setSelectedBrand(null);
+      setSelectedEntry(item.entry);
+    } else {
+      setSelectedEntry(null);
+      setSelectedBrand(item.brand);
     }
   };
-
-  if (isIdle && featuredBrands?.length) {
-    return (
-      <div className="text-center max-w-4xl">
-        <Badge className="mb-6 bg-tier-featured text-background">Featured Brand</Badge>
-        <h2 className="text-display mb-4">
-          {featuredBrands[carouselIndex]?.name}
-        </h2>
-        <div className="flex justify-center gap-2 mt-8">
-          {featuredBrands.map((_, i) => (
-            <div
-              key={i}
-              className={`w-2 h-2 rounded-full transition-colors ${
-                i === carouselIndex ? 'bg-primary' : 'bg-muted'
-              }`}
-            />
-          ))}
-        </div>
-        <p className="text-muted-foreground mt-8">Touch or use remote to explore categories</p>
-      </div>
-    );
-  }
 
   return (
-    <div className="text-center max-w-4xl">
-      <p className="text-muted-foreground mb-4 text-lg">Category</p>
-      <button 
-        onClick={handleCategoryClick}
-        className="text-display mb-8 hover:text-primary transition-colors cursor-pointer bg-transparent border-none"
-      >
-        {currentCategory?.name || 'All Categories'}
-      </button>
-      {currentCategory?.description && (
-        <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-          {currentCategory.description}
-        </p>
-      )}
-      
-      {/* Navigation arrows */}
-      <div className="flex justify-center gap-8 mt-12">
-        <Button
-          variant="outline"
-          size="lg"
-          className="w-16 h-16"
-          onClick={handlePrevCategory}
-        >
-          <ChevronLeft className="w-8 h-8" />
-        </Button>
-        <Button
-          variant="outline"
-          size="lg"
-          className="w-16 h-16"
-          onClick={handleNextCategory}
-        >
-          <ChevronRight className="w-8 h-8" />
-        </Button>
+    <div className="space-y-10 pb-12">
+      {heroItem ? <Hero item={heroItem} onSelect={handleSelect} /> : null}
+
+      <div className="space-y-10">
+        {rows.map((row) => (
+          <CarouselRow key={row.title} title={row.title} items={row.items} onSelect={handleSelect} />
+        ))}
       </div>
+
+      <EntryModal
+        entry={selectedEntry}
+        open={!!selectedEntry}
+        onOpenChange={(open) => !open && setSelectedEntry(null)}
+      />
+      <BrandModal
+        brand={selectedBrand}
+        open={!!selectedBrand}
+        onOpenChange={(open) => !open && setSelectedBrand(null)}
+      />
     </div>
   );
 }

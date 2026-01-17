@@ -9,9 +9,9 @@ export default function DisplayLayout() {
   const remoteUrl = `${window.location.origin}/remote`;
 
   return (
-    <div className="min-h-screen bg-background display-mode text-foreground overflow-hidden">
+    <div className="min-h-screen bg-background display-mode text-foreground">
       {/* Header */}
-      <header className="absolute top-0 left-0 right-0 p-6 flex items-center justify-between z-10">
+      <header className="fixed top-0 left-0 right-0 p-6 flex items-center justify-between z-10">
         <div className="flex items-center gap-4">
           <Recycle className="w-10 h-10 text-primary" />
           <h1 className="text-3xl font-bold">Upcycling Dictionary</h1>
@@ -26,12 +26,12 @@ export default function DisplayLayout() {
       </header>
 
       {/* Main Content */}
-      <main className="h-screen flex items-center justify-center pt-20 pb-32 px-8">
+      <main className="min-h-screen pt-24 pb-36 px-8">
         <Outlet />
       </main>
 
       {/* Footer with QR Code */}
-      <footer className="absolute bottom-0 left-0 right-0 p-6 flex items-end justify-between">
+      <footer className="fixed bottom-0 left-0 right-0 p-6 flex items-end justify-between">
         <div className="text-sm text-muted-foreground">
           <p>Scan to control this display</p>
         </div>

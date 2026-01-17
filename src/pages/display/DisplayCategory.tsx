@@ -1,92 +1,101 @@
-import { useParams, useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Skeleton } from '@/components/ui/skeleton';
+import { useMemo, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
-import type { Category, DictionaryEntry } from '@/types/database';
+import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
+import { useCategories } from '@/hooks/useCategories';
+import { useDictionaryEntriesByCategory } from '@/hooks/useDictionaryEntries';
+import { useBrandsByCategory } from '@/hooks/useBrands';
+import Hero from '@/components/display/Hero';
+import CarouselRow from '@/components/display/CarouselRow';
+import EntryModal from '@/components/display/EntryModal';
+import BrandModal from '@/components/display/BrandModal';
+import type { DictionaryEntry } from '@/types/database';
+import type { DisplayBrand, DisplayItem } from '@/components/display/types';
 
 export default function DisplayCategory() {
   const { categoryId } = useParams<{ categoryId: string }>();
   const navigate = useNavigate();
 
-  const { data: category, isLoading: categoryLoading } = useQuery({
-    queryKey: ['category', categoryId],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('categories')
-        .select('*')
-        .eq('id', categoryId)
-        .single();
-      if (error) throw error;
-      return data as Category;
-    },
-    enabled: !!categoryId,
-  });
+  const { data: categories, isLoading: categoriesLoading } = useCategories(true);
+  const { data: entries, isLoading: entriesLoading } = useDictionaryEntriesByCategory(categoryId ?? null, true);
+  const { data: brands, isLoading: brandsLoading } = useBrandsByCategory(categoryId ?? null, true);
 
-  const { data: entries, isLoading: entriesLoading } = useQuery({
-    queryKey: ['category-entries', categoryId],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('entry_categories')
-        .select('entry_id')
-        .eq('category_id', categoryId);
-      if (error) throw error;
-      
-      if (!data.length) return [];
-      
-      const { data: entriesData, error: entriesError } = await supabase
-        .from('dictionary_entries')
-        .select('*')
-        .in('id', data.map(d => d.entry_id))
-        .eq('status', 'published');
-      if (entriesError) throw entriesError;
-      return entriesData as DictionaryEntry[];
-    },
-    enabled: !!categoryId,
-  });
+  const [selectedEntry, setSelectedEntry] = useState<DictionaryEntry | null>(null);
+  const [selectedBrand, setSelectedBrand] = useState<DisplayBrand | null>(null);
 
-  if (categoryLoading) {
-    return <Skeleton className="h-96 w-full max-w-4xl" />;
+  const category = categories?.find((item) => item.id === categoryId);
+
+  const entryItems = useMemo<DisplayItem[]>(() => {
+    return (entries as DictionaryEntry[] | undefined)?.map((entry) => ({
+      kind: 'entry',
+      entry,
+    })) || [];
+  }, [entries]);
+
+  const brandItems = useMemo<DisplayItem[]>(() => {
+    return (brands as DisplayBrand[] | undefined)?.map((brand) => ({
+      kind: 'brand',
+      brand,
+    })) || [];
+  }, [brands]);
+
+  const heroItem = entryItems[0] || brandItems[0];
+
+  const handleSelect = (item: DisplayItem) => {
+    if (item.kind === 'entry') {
+      setSelectedBrand(null);
+      setSelectedEntry(item.entry);
+    } else {
+      setSelectedEntry(null);
+      setSelectedBrand(item.brand);
+    }
+  };
+
+  if (categoriesLoading) {
+    return <Skeleton className="h-96 w-full" />;
   }
 
   return (
-    <div className="text-center max-w-4xl">
-      <Button
-        variant="ghost"
-        className="absolute left-8 top-1/2 -translate-y-1/2"
-        onClick={() => navigate('/display')}
-      >
-        <ArrowLeft className="w-8 h-8" />
-      </Button>
+    <div className="space-y-10 pb-12">
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <Button variant="ghost" onClick={() => navigate('/display')}>
+          <ArrowLeft className="w-5 h-5 mr-2" />
+          Back to browse
+        </Button>
+        <div className="text-right">
+          <p className="text-sm uppercase tracking-wide text-muted-foreground">Category</p>
+          <h2 className="text-3xl font-semibold">{category?.name || 'Category'}</h2>
+          {category?.description ? (
+            <p className="text-muted-foreground max-w-2xl">{category.description}</p>
+          ) : null}
+        </div>
+      </div>
 
-      <Badge className="mb-6">Category</Badge>
-      <h2 className="text-display mb-4">{category?.name}</h2>
-      {category?.description && (
-        <p className="text-xl text-muted-foreground mb-8">{category.description}</p>
-      )}
+      {heroItem ? <Hero item={heroItem} onSelect={handleSelect} /> : null}
 
       {entriesLoading ? (
-        <Skeleton className="h-32 w-full" />
-      ) : entries?.length ? (
-        <div className="grid gap-4 mt-8">
-          {entries.slice(0, 5).map((entry) => (
-            <button
-              key={entry.id}
-              onClick={() => navigate(`/display/entry/${entry.id}`)}
-              className="text-left p-6 bg-card rounded-lg hover:bg-accent transition-colors"
-            >
-              <h3 className="text-2xl font-semibold">{entry.title}</h3>
-              {entry.body && (
-                <p className="text-muted-foreground mt-2 line-clamp-2">{entry.body}</p>
-              )}
-            </button>
-          ))}
-        </div>
+        <Skeleton className="h-64 w-full" />
       ) : (
-        <p className="text-muted-foreground">No entries in this category yet</p>
+        <CarouselRow title="Entries" items={entryItems} onSelect={handleSelect} />
       )}
+
+      {brandsLoading ? (
+        <Skeleton className="h-64 w-full" />
+      ) : (
+        <CarouselRow title="Brands" items={brandItems} onSelect={handleSelect} />
+      )}
+
+      <EntryModal
+        entry={selectedEntry}
+        open={!!selectedEntry}
+        onOpenChange={(open) => !open && setSelectedEntry(null)}
+      />
+      <BrandModal
+        brand={selectedBrand}
+        open={!!selectedBrand}
+        onOpenChange={(open) => !open && setSelectedBrand(null)}
+      />
     </div>
   );
 }
