@@ -63,7 +63,7 @@ export default function PosterCard({ item, onSelect, index = 0, variant = 'defau
 
         {/* Base info - always visible */}
         <div className={`absolute left-3 right-3 transition-all duration-300 ${
-          isFeatured ? 'bottom-4 group-hover:bottom-12' : 'bottom-3 group-hover:bottom-16'
+          isFeatured ? 'bottom-4 group-hover:bottom-20' : 'bottom-3 group-hover:bottom-24'
         }`}>
           <p className="text-xs uppercase tracking-widest text-white/60">
             {item.kind === 'entry' ? 'Entry' : 'Brand'}
