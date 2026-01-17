@@ -6,7 +6,7 @@ import { QRCodeSVG } from 'qrcode.react';
 import { Recycle } from 'lucide-react';
 import { getBrandImage } from '@/components/display/types';
 
-const CAROUSEL_INTERVAL = 6000;
+const CAROUSEL_INTERVAL = 8000; // Longer to appreciate Ken Burns
 const CROSSFADE_DURATION = 1500;
 
 export default function DisplayIdle() {
@@ -15,10 +15,12 @@ export default function DisplayIdle() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [nextIndex, setNextIndex] = useState<number | null>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [fadeInReady, setFadeInReady] = useState(false);
   const remoteUrl = `${window.location.origin}/remote`;
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const frameRef = useRef<number | null>(null);
 
-  // Auto-rotate with crossfade
+  // Auto-rotate with proper crossfade
   useEffect(() => {
     if (!featuredBrands?.length || featuredBrands.length <= 1) return;
 
@@ -26,12 +28,21 @@ export default function DisplayIdle() {
       const next = (currentIndex + 1) % featuredBrands.length;
       setNextIndex(next);
       setIsTransitioning(true);
+      setFadeInReady(false);
+
+      // Wait for next frame to ensure the element is mounted at opacity 0
+      frameRef.current = requestAnimationFrame(() => {
+        frameRef.current = requestAnimationFrame(() => {
+          setFadeInReady(true);
+        });
+      });
 
       // Complete transition after fade duration
       timeoutRef.current = setTimeout(() => {
         setCurrentIndex(next);
         setNextIndex(null);
         setIsTransitioning(false);
+        setFadeInReady(false);
       }, CROSSFADE_DURATION);
     };
 
@@ -39,6 +50,7 @@ export default function DisplayIdle() {
     return () => {
       clearInterval(interval);
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      if (frameRef.current) cancelAnimationFrame(frameRef.current);
     };
   }, [featuredBrands?.length, currentIndex]);
 
@@ -60,7 +72,7 @@ export default function DisplayIdle() {
       role="button"
       tabIndex={0}
     >
-      {/* Current background image */}
+      {/* Current background image with Ken Burns */}
       {currentImage && (
         <div 
           className="absolute inset-0 transition-opacity ease-in-out"
@@ -70,26 +82,28 @@ export default function DisplayIdle() {
           }}
         >
           <img 
+            key={`current-${currentIndex}`}
             src={currentImage} 
             alt="" 
-            className="w-full h-full object-cover scale-105"
+            className="w-full h-full object-cover animate-ken-burns"
           />
         </div>
       )}
       
-      {/* Next background image (fades in) */}
+      {/* Next background image (fades in from 0) */}
       {nextImage && isTransitioning && (
         <div 
           className="absolute inset-0 transition-opacity ease-in-out"
           style={{ 
             transitionDuration: `${CROSSFADE_DURATION}ms`,
-            opacity: 1 
+            opacity: fadeInReady ? 1 : 0 
           }}
         >
           <img 
+            key={`next-${nextIndex}`}
             src={nextImage} 
             alt="" 
-            className="w-full h-full object-cover scale-105"
+            className="w-full h-full object-cover animate-ken-burns"
           />
         </div>
       )}
