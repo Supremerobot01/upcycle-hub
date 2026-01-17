@@ -57,7 +57,7 @@ export default function PosterCard({ item, onSelect, index = 0, variant = 'defau
             <Badge className="bg-green-500 text-white text-xs">NEW</Badge>
           )}
           {tier === 'featured' && (
-            <Badge className="bg-tier-featured text-white text-xs">Featured</Badge>
+            <Badge className="bg-black/60 text-white text-xs backdrop-blur-sm shadow-[0_0_12px_rgba(255,255,255,0.3)] border-white/20">Featured</Badge>
           )}
         </div>
 
