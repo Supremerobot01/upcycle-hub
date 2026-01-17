@@ -26,6 +26,7 @@ import AdminPanel from "./pages/portal/AdminPanel";
 // Display pages
 import DisplayHome from "./pages/display/DisplayHome";
 import DisplayCategory from "./pages/display/DisplayCategory";
+import DisplayBrowse from "./pages/display/DisplayBrowse";
 import DisplayIdle from "./pages/display/DisplayIdle";
 
 // Dictionary pages
@@ -71,6 +72,7 @@ const App = () => (
             {/* Display routes (PUBLIC, READ-ONLY) */}
             <Route path="/display" element={<DisplayLayout />}>
               <Route index element={<DisplayHome />} />
+              <Route path="browse/:browseType" element={<DisplayBrowse />} />
               <Route path="category/:categoryId" element={<DisplayCategory />} />
               <Route path="idle" element={<DisplayIdle />} />
             </Route>
