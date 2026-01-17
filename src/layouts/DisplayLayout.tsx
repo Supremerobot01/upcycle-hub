@@ -11,7 +11,7 @@ export default function DisplayLayout() {
   return <div className="min-h-screen bg-background display-mode text-foreground">
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 p-6 flex items-center justify-between z-10">
-        <img alt="Upcycling Dictionary" className="h-12" src="/lovable-uploads/78b8e1a6-39d2-4826-bfeb-4d7da9873aab.png" />
+        <img alt="Upcycling Dictionary" className="h-12" src="https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/CORACvHI5kH2lZgOaiW9/media/6961da16f8a93b137e5d0338.png" />
         <div className="flex items-center gap-4">
           {isControlled && <Badge variant="secondary" className="text-sm">
               Remote Connected
