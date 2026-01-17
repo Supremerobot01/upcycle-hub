@@ -90,6 +90,7 @@ export default function DisplayHome() {
 
   return (
     <div className="space-y-10 pb-12">
+      <div className="text-sm font-semibold text-destructive">DISPLAY HOME RENDERED</div>
       {heroItem ? <Hero item={heroItem} onSelect={handleSelect} /> : null}
 
       <div className="space-y-10">
