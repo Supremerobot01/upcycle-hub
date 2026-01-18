@@ -8,7 +8,8 @@ export default function DictionaryLayout() {
       <header className="border-b bg-card sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <Link to="/dictionary" className="flex items-center gap-3">
-            <img src="/logo.png" alt="Upcycling Dictionary" className="h-10 w-auto" />
+            <img src="/logo.png" alt="Upcycling Dictionary" className="h-10 w-auto" onError={(e) => {e.currentTarget.style.display = 'none'}} />
+            <h1 className="text-xl font-semibold">Upcycling Dictionary</h1>
           </Link>
           <Link to="/portal/login">
             <Button variant="outline" size="sm">
