@@ -13,7 +13,8 @@ export default function DisplayLayout() {
       <header className="fixed top-0 left-0 right-0 px-6 py-3 flex items-center justify-between z-10 bg-black/40 backdrop-blur-sm">
         <div className="flex items-center gap-3">
           <img src="/logo.png" alt="Upcycling Dictionary" className="h-12 w-auto" onError={(e) => {e.currentTarget.style.display = 'none'}} />
-          <h1 className="text-2xl font-bold">Upcycling Dictionary</h1>
+          <img src="/logo-text.png" alt="Upcycling Dictionary" className="h-8 w-auto" onError={(e) => {e.currentTarget.style.display = 'none'}} />
+          <h1 className="text-2xl font-bold hidden">Upcycling Dictionary</h1>
         </div>
         <div className="flex items-center gap-4">
           {isControlled && (
