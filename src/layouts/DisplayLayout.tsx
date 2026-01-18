@@ -12,7 +12,12 @@ export default function DisplayLayout() {
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 px-6 py-3 flex items-center justify-between z-10 bg-black/40 backdrop-blur-sm">
         <div className="flex items-center">
-          <img src="/header-logo.png" alt="Upcycling Dictionary" className="h-10 sm:h-12 md:h-14 w-auto" onError={(e) => {e.currentTarget.style.display = 'none'}} />
+          <img 
+            src="/header-logo.png" 
+            alt="Upcycling Dictionary" 
+            className="h-10 sm:h-12 md:h-14 w-auto transition-all duration-300 hover:scale-105 hover:brightness-110" 
+            onError={(e) => {e.currentTarget.style.display = 'none'}} 
+          />
         </div>
         <div className="flex items-center gap-4">
           {isControlled && (

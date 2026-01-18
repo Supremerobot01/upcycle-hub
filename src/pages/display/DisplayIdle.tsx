@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { useFeaturedBrands } from '@/hooks/useBrands';
 import { Badge } from '@/components/ui/badge';
 import { QRCodeSVG } from 'qrcode.react';
-import { Recycle } from 'lucide-react';
 import { getBrandImage } from '@/components/display/types';
 
 // Timing
@@ -251,10 +250,14 @@ export default function DisplayIdle() {
         />
       </div>
 
-      {/* Header */}
-      <header className="absolute top-0 left-0 right-0 p-8 flex items-center gap-4 z-10">
-        <Recycle className="w-12 h-12 text-primary drop-shadow-lg" />
-        <h1 className="text-4xl font-bold text-white drop-shadow-lg">Upcycling Dictionary</h1>
+      {/* Header with big beautiful logo */}
+      <header className="absolute top-0 left-0 right-0 p-8 flex items-center justify-center z-10">
+        <img 
+          src="/header-logo.png" 
+          alt="Upcycling Dictionary" 
+          className="h-20 md:h-28 lg:h-32 w-auto drop-shadow-[0_4px_20px_rgba(0,0,0,0.8)] transition-all duration-300 hover:scale-105 hover:brightness-110"
+          onError={(e) => {e.currentTarget.style.display = 'none'}}
+        />
       </header>
 
       {/* Centered content - positioned lower for cinematic feel */}
