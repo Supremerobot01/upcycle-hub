@@ -5,13 +5,15 @@ VALUES (
   'upcycling',
   'Upcycling is the process of transforming waste materials or unwanted products into new materials or products of higher quality or environmental value. Unlike recycling, which often breaks down materials, upcycling repurposes items creatively while maintaining or enhancing their original form.',
   'published'
-);
+)
+ON CONFLICT (slug) DO NOTHING;
 
 -- Link it to a category
 INSERT INTO public.entry_categories (entry_id, category_id)
 SELECT 
   (SELECT id FROM dictionary_entries WHERE slug = 'upcycling'),
-  '053b1215-f840-4e8e-8b9f-00f759afba48';
+  '053b1215-f840-4e8e-8b9f-00f759afba48'
+ON CONFLICT DO NOTHING;
 -- Insert more sample published dictionary entries
 INSERT INTO public.dictionary_entries (title, slug, body, status) VALUES
 (
@@ -37,14 +39,16 @@ INSERT INTO public.dictionary_entries (title, slug, body, status) VALUES
   'circular-fashion',
   'Circular fashion is a regenerative system where products are designed, produced, and used in ways that maximize their lifespan and minimize waste. It emphasizes durability, repairability, and eventual recyclability, keeping materials in use for as long as possible.',
   'published'
-);
+)
+ON CONFLICT (slug) DO NOTHING;
 
 -- Link entries to categories
 INSERT INTO public.entry_categories (entry_id, category_id) VALUES
 ((SELECT id FROM dictionary_entries WHERE slug = 'zero-waste-design'), '3b944b70-49dd-45cf-9543-39332f176ed7'),
 ((SELECT id FROM dictionary_entries WHERE slug = 'deadstock-fabric'), 'df9380af-42f8-4e0f-bbcb-a57cae5e8f5b'),
 ((SELECT id FROM dictionary_entries WHERE slug = 'textile-recycling'), 'baa5cb93-bb6f-42d0-ba5a-f2420e432e71'),
-((SELECT id FROM dictionary_entries WHERE slug = 'circular-fashion'), 'fa49131a-d024-482d-890a-2225b793f18a');
+((SELECT id FROM dictionary_entries WHERE slug = 'circular-fashion'), 'fa49131a-d024-482d-890a-2225b793f18a')
+ON CONFLICT DO NOTHING;
 
 -- Insert a sample published brand using the existing user
 INSERT INTO public.brands (user_id, name, email, website_url, tier, status, primary_category_id, secondary_category_id)
@@ -57,14 +61,16 @@ VALUES (
   'published',
   '053b1215-f840-4e8e-8b9f-00f759afba48',
   'fa49131a-d024-482d-890a-2225b793f18a'
-);
+)
+ON CONFLICT (user_id, name) DO NOTHING;
 
 -- Add brand content for the sample brand
 INSERT INTO public.brand_content (brand_id, field_type, value, display_order) VALUES
 ((SELECT id FROM brands WHERE name = 'EcoThread Collective'), 'blurb', 'Transforming textile waste into stunning fashion pieces through innovative upcycling techniques.', 1),
 ((SELECT id FROM brands WHERE name = 'EcoThread Collective'), 'image', 'https://images.unsplash.com/photo-1558171813-4c088753af8f?w=800', 2),
 ((SELECT id FROM brands WHERE name = 'EcoThread Collective'), 'bio', 'EcoThread Collective is a pioneering sustainable fashion brand dedicated to reducing textile waste. Founded in 2020, we work with local artisans to transform discarded materials into beautiful, wearable art. Every piece tells a story of transformation and environmental responsibility.', 3),
-((SELECT id FROM brands WHERE name = 'EcoThread Collective'), 'logo', 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=200', 4);
+((SELECT id FROM brands WHERE name = 'EcoThread Collective'), 'logo', 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=200', 4)
+ON CONFLICT DO NOTHING;
 -- Drop the unique constraint on user_id to allow multiple brands per user (for testing purposes)
 ALTER TABLE public.brands DROP CONSTRAINT IF EXISTS brands_user_id_key;
 
@@ -76,7 +82,8 @@ INSERT INTO public.brands (user_id, name, email, website_url, tier, status, prim
 ('f10e9502-b5f9-4608-a858-e322b582c6d3', 'Reimagine Apparel', 'team@reimagine.example', 'https://reimagine.example', 'basic', 'published', '3b944b70-49dd-45cf-9543-39332f176ed7', NULL),
 ('f10e9502-b5f9-4608-a858-e322b582c6d3', 'Heritage Threads', 'info@heritagethreads.example', 'https://heritagethreads.example', 'featured', 'published', '674eac39-0e9f-426e-9fd0-5b8e0ef21c08', '207b8830-a9bc-4b09-906b-717b378964d4'),
 ('f10e9502-b5f9-4608-a858-e322b582c6d3', 'Artisan Upcycle', 'create@artisanupcycle.example', 'https://artisanupcycle.example', 'standard', 'published', '7fa5c0d8-d810-4733-ab6a-2c5facaedea4', NULL),
-('f10e9502-b5f9-4608-a858-e322b582c6d3', 'Luxe Remake', 'studio@luxeremake.example', 'https://luxeremake.example', 'featured', 'published', '207b8830-a9bc-4b09-906b-717b378964d4', '33d6481c-5974-4bad-9f66-32e50e5c767a');
+('f10e9502-b5f9-4608-a858-e322b582c6d3', 'Luxe Remake', 'studio@luxeremake.example', 'https://luxeremake.example', 'featured', 'published', '207b8830-a9bc-4b09-906b-717b378964d4', '33d6481c-5974-4bad-9f66-32e50e5c767a')
+ON CONFLICT (user_id, name) DO NOTHING;
 
 -- Add brand content for the new brands
 INSERT INTO public.brand_content (brand_id, field_type, value, display_order) VALUES
@@ -107,7 +114,8 @@ INSERT INTO public.brand_content (brand_id, field_type, value, display_order) VA
 ((SELECT id FROM brands WHERE name = 'Luxe Remake'), 'blurb', 'High-end upcycled fashion that rivals luxury brands in quality and design.', 1),
 ((SELECT id FROM brands WHERE name = 'Luxe Remake'), 'image', 'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=800', 2),
 ((SELECT id FROM brands WHERE name = 'Luxe Remake'), 'bio', 'Luxe Remake sources premium vintage pieces and transforms them into couture-quality garments.', 3),
-((SELECT id FROM brands WHERE name = 'Luxe Remake'), 'logo', 'https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=200', 4);
+((SELECT id FROM brands WHERE name = 'Luxe Remake'), 'logo', 'https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=200', 4)
+ON CONFLICT DO NOTHING;
 -- Insert comprehensive dictionary entries
 INSERT INTO dictionary_entries (title, slug, body, status) VALUES
 -- Zero-Waste Design entries
@@ -404,7 +412,8 @@ Academic work also provides historical context, connecting contemporary sustaina
 
 The gap between laboratory success and commercial viability remains wideâ€”promising technologies often stall at scaling. Close collaboration between researchers and industry practitioners helps bridge this gap.
 
-Current frontiers include enzymatic fiber separation, bio-fabricated materials, and closed-loop chemical recycling at commercially viable costs.', 'published');
+Current frontiers include enzymatic fiber separation, bio-fabricated materials, and closed-loop chemical recycling at commercially viable costs.', 'published')
+ON CONFLICT (slug) DO NOTHING;
 
 -- Make user_id nullable for mock/admin-created brands
 ALTER TABLE brands ALTER COLUMN user_id DROP NOT NULL;
