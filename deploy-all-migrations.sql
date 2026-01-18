@@ -5,8 +5,7 @@ VALUES (
   'upcycling',
   'Upcycling is the process of transforming waste materials or unwanted products into new materials or products of higher quality or environmental value. Unlike recycling, which often breaks down materials, upcycling repurposes items creatively while maintaining or enhancing their original form.',
   'published'
-)
-ON CONFLICT (slug) DO NOTHING;
+);
 
 -- Link it to a category
 INSERT INTO public.entry_categories (entry_id, category_id)
