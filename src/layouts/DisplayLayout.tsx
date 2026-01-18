@@ -2,7 +2,6 @@ import { Outlet } from 'react-router-dom';
 import { useDisplaySession } from '@/hooks/useDisplaySession';
 import { Badge } from '@/components/ui/badge';
 import { QRCodeSVG } from 'qrcode.react';
-import { Recycle } from 'lucide-react';
 
 export default function DisplayLayout() {
   const { isControlled } = useDisplaySession();
@@ -13,8 +12,7 @@ export default function DisplayLayout() {
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 p-6 flex items-center justify-between z-10">
         <div className="flex items-center gap-4">
-          <Recycle className="w-10 h-10 text-primary" />
-          <h1 className="text-3xl font-bold">Upcycling Dictionary</h1>
+          <img src="/logo.png" alt="Upcycling Dictionary" className="h-16 w-auto" />
         </div>
         <div className="flex items-center gap-4">
           {isControlled && (

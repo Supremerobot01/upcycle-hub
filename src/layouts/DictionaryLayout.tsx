@@ -1,6 +1,6 @@
 import { Outlet, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Recycle, LogIn } from 'lucide-react';
+import { LogIn } from 'lucide-react';
 
 export default function DictionaryLayout() {
   return (
@@ -8,8 +8,7 @@ export default function DictionaryLayout() {
       <header className="border-b bg-card sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <Link to="/dictionary" className="flex items-center gap-3">
-            <Recycle className="w-6 h-6 text-primary" />
-            <h1 className="text-xl font-semibold">Upcycling Dictionary</h1>
+            <img src="/logo.png" alt="Upcycling Dictionary" className="h-10 w-auto" />
           </Link>
           <Link to="/portal/login">
             <Button variant="outline" size="sm">
