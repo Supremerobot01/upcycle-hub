@@ -10,7 +10,7 @@ export default function DisplayLayout() {
   return (
     <div className="min-h-screen bg-background display-mode text-foreground">
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 p-6 flex items-center justify-between z-10">
+      <header className="fixed top-0 left-0 right-0 p-6 flex items-center justify-between z-10 bg-black/40 backdrop-blur-sm">
         <div className="flex items-center gap-4">
           <img src="/logo.png" alt="Upcycling Dictionary" className="h-16 w-auto" onError={(e) => {e.currentTarget.style.display = 'none'}} />
           <h1 className="text-3xl font-bold">Upcycling Dictionary</h1>
